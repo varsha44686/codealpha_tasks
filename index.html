@@ -3,43 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image gallery</title>
     <link rel="stylesheet" href="style.css">
-    <title>Calculator</title>
 </head>
 <body>
-    <div class="calculator">
-        <input type="text" placeholder="0" id="inputBox">
-        <div>
-           <button class="operator" >AC</button>
-           <button class="operator">DEL</button>
-           <button class="operator">%</button>
-           <button class="operator">/</button>
+    <div class="full-img" id="fullImgBox">
+        <img src="images/15003217078_2b1a912163.jpg" id="fullImg">
+        <span onclick="closeFullImg()">X</span>
     </div>
-    <div>
-        <button>7</button>
-        <button>8</button>
-        <button>9</button>
-        <button class="operator">*</button>
- </div>
- <div>
-    <button>4</button>
-    <button>5</button>
-    <button>6</button>
-    <button class="operator">-</button>
-</div>
-<div>
-    <button>1</button>
-    <button>2</button>
-    <button>3</button>
-    <button class="operator">+</button>
-</div>
-<div>
-    <button>00</button>
-    <button>0</button>
-    <button>.</button>
-    <button class="equalbtn">=</button>
-</div>
+    <div class="img-gallery">
+        <img src="images/15003217078_2b1a912163.jpg" onclick="openfullImg(this.src)">
+        <img src="images/download.webp"onclick="openfullImg(this.src)">
+        <img src="images/OIP (1).webp" onclick="openfullImg(this.src)">
+        <img src="images/OIP (2).webp" onclick="openfullImg(this.src)">
+        <img src="images/OIP (3).webp" onclick="openfullImg(this.src)">
+        <img src="images/OIP (4).webp" onclick="openfullImg(this.src)">
+        <img src="images/OIP.webp" onclick="openfullImg(this.src)">
     </div>
-    <script type="text/javascript" language="JavaScript" src="script.js"></script> 
 </body>
+<script>
+    function openfullImg(src) {
+    document.getElementById("fullImgBox").style.display = "flex";
+    document.getElementById("fullImg").src = src;
+}
+
+function closeFullImg() {
+    document.getElementById("fullImgBox").style.display = "none";
+}
+
+</script>
 </html>
