@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="musicstyle.css">
+</head>
+<body>
+    <div class="player">
+    <div class="info">
+      <div class="title" id="title">Title</div>
+      <div class="artist" id="artist">Artist</div>
+    </div>
+    <div class="controls">
+      <button onclick="prevSong()">⏮️</button>
+      <button onclick="togglePlay()" id="playBtn">▶️</button>
+      <button onclick="nextSong()">⏭️</button>
+    </div>
+    <div class="progress-container">
+      <input type="range" id="progress" class="progress" value="0" max="100">
+      <div class="time">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+    <div class="volume">
+     <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+    </div>
+    <div class="playlist" id="playlist"></div>
+  </div>
+
+  <audio id="audio"></audio>
+
+  <script>
+    const songs = [
+      { title: 'Song One', artist: 'Artist A', src: 'song1.mp3' },
+      { title: 'Song Two', artist: 'Artist B', src: 'song2.mp3' },
+      { title: 'Song Three', artist: 'Artist C', src: 'song3.mp3' },
+    ];
+
+    let currentSong = 0;
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const title = document.getElementById('title');
+    const artist = document.getElementById('artist');
+    const progress = document.getElementById('progress');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const volume = document.getElementById('volume');
+    const playlist = document.getElementById('playlist');
+
+    function loadSong(index) {
+      const song = songs[index];
+      audio.src = song.src;
+      title.textContent = song.title;
+      artist.textContent = song.artist;
+      updatePlaylistHighlight();
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = '⏸️';
+      } else {
+        audio.pause();
+        playBtn.textContent = '▶️';
+      }
+    }
+
+    function prevSong() {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      loadSong(currentSong);
+      audio.play();
+      playBtn.textContent = '⏸️';
+    }
+
+    function nextSong() {
+      currentSong = (currentSong + 1) % songs.length;
+      loadSong(currentSong);
+      audio.play();
+      playBtn.textContent = '⏸️';
+    }
+
+    audio.addEventListener('timeupdate', () => {
+      const progressPercent = (audio.currentTime / audio.duration) * 100;
+      progress.value = progressPercent || 0;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationEl.textContent = formatTime(audio.duration);
+    });
+
+    progress.addEventListener('input', () => {
+      audio.currentTime = (progress.value / 100) * audio.duration;
+    });
+
+    volume.addEventListener('input', () => {
+      audio.volume = volume.value;
+    });
+
+    audio.addEventListener('ended', () => {
+      nextSong(); // autoplay
+    });
+
+    function formatTime(time) {
+      if (isNaN(time)) return '0:00';
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+      return `${minutes}:${seconds}`;
+    }
+
+    function renderPlaylist() {
+      songs.forEach((song, index) => {
+        const item = document.createElement('div');
+        item.className = 'playlist-item';
+        item.textContent = `${song.title} - ${song.artist}`;
+        item.onclick = () => {
+          currentSong = index;
+          loadSong(currentSong);
+          audio.play();
+          playBtn.textContent = '⏸️';
+        };
+        playlist.appendChild(item);
+      });
+    }
+
+    function updatePlaylistHighlight() {
+      const items = playlist.querySelectorAll('.playlist-item');
+      items.forEach((item, i) => {
+        item.classList.toggle('active', i === currentSong);
+      });
+    }
+
+    renderPlaylist();
+    loadSong(currentSong);
+  </script>
+</body>
+</html>
